@@ -2,11 +2,13 @@
 
 <link rel="import" href="../core-collapse/core-collapse.html">
 <link rel="import" href="../aha-table/src/aha-table.html">
+<link rel="import" href="../sortable-table/sortable-table.html">
 <link rel="import" href="../core-icon-button/core-icon-button.html">
 
 
 <!--
-Element providing solution to no problem in particular.
+Copy any html table or list and paste it inside the text box. It returns
+JSON for table/list data.
 
 ##### Example
 
@@ -34,6 +36,12 @@ Element providing solution to no problem in particular.
       #paste_here {
         height: 35px;
       }
+      .table-container {
+        width: 500px;
+        height: 400px;
+        overflow: scroll;
+        resize: both;
+      }
 
     </style>
     <link rel="stylesheet" href="../sortable-table/css/bootstrap.css" shim-shadowdom>
@@ -46,10 +54,18 @@ Element providing solution to no problem in particular.
 
     <core-collapse id="results_collapse">
 
+      <div class="table-container">
+        <!-- aha-table doesn't update the columns -->
+        <aha-table id="table" pagesize="10" editable="false"  class="bootstrap" showFooter="true"></aha-table>
 
-      <aha-table id="table" pagesize="10"  class="bootstrap" showFooter="true">
+      <!-- pagination links don't show up for sortable table -->
+    
+<!--
+       <sortable-table id="table" pagesize="10" editable="false"  class="bootstrap" showFooter="true">
+      </sortable-table>
+ -->
 
-      </aha-table>
+      </div>
     </core-collapse>
 
   </template>
@@ -65,9 +81,13 @@ Element providing solution to no problem in particular.
 
 
         //self.hasData = false;
-        self.$.paste_here.addEventListener('paste', function(e) {
+        self.$.paste_here.addEventListener('paste', self.processInput.bind(self));
+      },
 
-          self.$.paste_here.value="Processing data";
+      processInput: function(e) {
+
+          var self = this;
+          self.$.paste_here.value="Processing data...";
 
           var tableData = e.clipboardData.getData('text/html');
           var tableEl = document.createElement('div');
@@ -77,59 +97,101 @@ Element providing solution to no problem in particular.
           var dataLabels = [];
           var data = [];
 
-          [].forEach.call(rows, function(row, i) {
-            //console.log('row', row);
-            var extractedRow = {};
-            var cells = row.querySelectorAll('td');
-            if(i==0 && cells.length==0) {
-              cells = row.querySelectorAll('th');
-            }
-            [].forEach.call(cells, function(cell, j) {
-            
-              //header
-              if(i===0) {
+          self.$.table.data = [];
 
-                var title = cell.innerText || 'no label';
-                title = title.replace(/\n/g, '');
-                dataLabels.push(title);
-                
+          console.log(rows);
+          console.log(rows.length);
 
+          if(rows.length>0)
+          {
+
+            [].forEach.call(rows, function(row, i) {
+              //console.log('row', row);
+              var extractedRow = {};
+              var cells = row.querySelectorAll('td');
+              if(i==0 && cells.length==0) {
+                cells = row.querySelectorAll('th');
               }
-              else {
+              [].forEach.call(cells, function(cell, j) {
+              
+                //header
+                if(i===0) {
 
-                var content = cell.innerText || 'no data';
+                  var title = cell.innerText || 'no label';
+                  //line breaks break the table.
+                  title = title.replace(/\n/g, '');
+                  dataLabels.push(title);
+                  
 
-                if(content==='no data') {
+                }
+                else {
+
+                  var content = cell.innerText;
 
                   // try image
-                  var img =  cell.querySelector('img');
-                  if(img) {
-                    content = img.getAttribute('src');
+                  if(!content) {
+                    var img =  cell.querySelector('img');
+                    if(img) {
+                      content = img.getAttribute('src');
+                    }
                   }
+
+                  if(content) {
+                    extractedRow[dataLabels[j]] = content;
+                  }
+
+
                 }
+              });
+              if(i!==0) {
+                data.push(extractedRow);
+              }
 
-                extractedRow[dataLabels[j]] = content;
+            });
+          
+          }
+          else {
+            var listItems = tableEl.querySelectorAll('li');
+            
+            [].forEach.call(listItems, function(item) {
 
+              var content = item.innerText;
+              if(!content) {
+                var img =  cell.querySelector('img');
+                if(img) {
+                  content = img.getAttribute('src');
+                }
+              }
 
+              if(content) {
+                data.push({row: content});
               }
             });
-            if(i!==0) {
-              data.push(extractedRow);
-            }
 
-          });
-          //console.log(rows);
 
-          self.$.paste_here.value="Data processed";
 
-          console.log(data);
-          //self.tableData = data;
-          self.$.table.data = data;
-          self.hasData = true;
+          }
+
+          if(data && data.length>0) {
+
+            setTimeout(function() {
+
+              self.$.paste_here.value="Data processed";
+
+              console.log(data);
+              //self.tableData = data;
+              self.$.table.data = data;
+              self.hasData = true;
+            },100);
+
+          }
+          else {
+            self.$.paste_here.value="No Table or list found";
+            self.hasData = false;
+          }
+
 
           e.preventDefault();
-
-        });
       },
 
       showResults: function(e) {
