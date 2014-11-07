@@ -101,10 +101,12 @@ JSON for table/list data.
 
           console.log(rows);
           console.log(rows.length);
-
+console.log("^^^");
+var re = new RegExp(String.fromCharCode(160), "g");
+console.log(re);
           if(rows.length>0)
           {
-
+            alert(1);
             [].forEach.call(rows, function(row, i) {
               //console.log('row', row);
               var extractedRow = {};
@@ -121,7 +123,7 @@ JSON for table/list data.
                   //line breaks break the table.
                   title = title.replace(/\n/g, '');
                   dataLabels.push(title);
-                  
+
 
                 }
                 else {
@@ -151,6 +153,7 @@ JSON for table/list data.
           
           }
           else {
+
             var listItems = tableEl.querySelectorAll('li');
             
             [].forEach.call(listItems, function(item) {
@@ -161,9 +164,9 @@ JSON for table/list data.
                 if(img) {
                   content = img.getAttribute('src');
                 }
-              }
-
-              if(content) {
+              }else {                
+                var re = new RegExp(String.fromCharCode(160), "g"); // catches &nbsp symbol and replaces with a normal space;
+                content = content.replace(re,' ');
                 data.push({row: content});
               }
             });
@@ -203,7 +206,10 @@ JSON for table/list data.
             this.$.results_collapse.toggle();
           }
       }, 
-
+      outputChanged: function(){
+        console.log("th-paste-data output changed");
+        this.fire('th-output-changed', this);
+      }
 
 
     });
