@@ -99,14 +99,8 @@ JSON for table/list data.
 
           self.$.table.data = [];
 
-          console.log(rows);
-          console.log(rows.length);
-console.log("^^^");
-var re = new RegExp(String.fromCharCode(160), "g");
-console.log(re);
           if(rows.length>0)
           {
-            alert(1);
             [].forEach.call(rows, function(row, i) {
               //console.log('row', row);
               var extractedRow = {};
@@ -165,8 +159,8 @@ console.log(re);
                   content = img.getAttribute('src');
                 }
               }else {                
-                var re = new RegExp(String.fromCharCode(160), "g"); // catches &nbsp symbol and replaces with a normal space;
-                content = content.replace(re,' ');
+                var spaceChar = new RegExp(String.fromCharCode(160), "g"); // catches &nbsp symbol and replaces with a normal space;
+                content = content.replace(spaceChar,' ');
                 data.push({row: content});
               }
             });
