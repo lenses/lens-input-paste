@@ -12,14 +12,14 @@ JSON for table/list data.
 
 ##### Example
 
-    <th-paste-data></th-paste-data>
+    <th-table-data></th-table-data>
 
-@element th-paste-data
+@element th-table-data
 @blurb Element providing solution to no problem in particular.
 @status alpha
-@homepage http://sepans.github.io/th-paste-data
+@homepage http://sepans.github.io/th-table-data
 -->
-<polymer-element name="th-paste-data" attributes="output">
+<polymer-element name="th-table-data" attributes="output">
 
 
   <template>
@@ -72,7 +72,7 @@ JSON for table/list data.
 
   <script>
 
-    Polymer('th-paste-data', {
+    Polymer('th-table-data', {
       tableData: null,
       hasData: false,
 
@@ -201,7 +201,7 @@ JSON for table/list data.
           }
       }, 
       outputChanged: function(){
-        console.log("th-paste-data output changed");
+        console.log("th-table-data output changed");
         this.fire('th-output-changed', this);
       }
 

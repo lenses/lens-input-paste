@@ -1,12 +1,12 @@
 {
-  "name": "th-paste-data",
+  "name": "th-table-data",
   "version": "0.0.0",
   "keywords": [
     "seed",
     "polymer",
     "web-components"
   ],
-  "main": "th-paste-data.html",
+  "main": "th-table-data.html",
   "dependencies": {
     "polymer": "Polymer/polymer#~0.3.5",
     "aha-table": "liuwenchao/aha-table#master"
