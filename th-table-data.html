@@ -1,8 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
-
 <link rel="import" href="../core-collapse/core-collapse.html">
 <link rel="import" href="../aha-table/src/aha-table.html">
-<link rel="import" href="../sortable-table/sortable-table.html">
 <link rel="import" href="../core-icon-button/core-icon-button.html">
 
 
@@ -45,7 +43,6 @@ JSON for table/list data.
 
 
     </style>
-    <link rel="stylesheet" href="../sortable-table/css/bootstrap.css" shim-shadowdom>
 
 
 
@@ -58,13 +55,6 @@ JSON for table/list data.
       <div class="table-container">
         <!-- aha-table doesn't update the columns -->
         <aha-table id="table" pagesize="10" editable="false"  class="bootstrap" showFooter="true"></aha-table>
-
-      <!-- pagination links don't show up for sortable table -->
-    
-<!--
-       <sortable-table id="table" pagesize="10" editable="false"  class="bootstrap" showFooter="true">
-      </sortable-table>
- -->
 
       </div>
     </core-collapse>
