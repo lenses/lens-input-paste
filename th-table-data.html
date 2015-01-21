@@ -109,6 +109,10 @@ JSON for table/list data.
                   var title = cell.innerText || 'no label';
                   //line breaks break the table.
                   title = title.replace(/\n/g, '');
+                  //replace space with _
+                  title = title.replace(/\s/g, '_');
+
+                  title = title.replace(/^([\d]+)/g, 'x$1');
                   dataLabels.push(title);
 
 
