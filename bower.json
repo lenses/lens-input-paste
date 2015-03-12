@@ -1,12 +1,12 @@
 {
-  "name": "th-table-data",
+  "name": "lens-input-paste",
   "version": "0.0.0",
   "keywords": [
     "seed",
     "polymer",
     "web-components"
   ],
-  "main": "th-table-data.html",
+  "main": "lens-input-paste.html",
   "dependencies": {
     "polymer": "Polymer/polymer#~0.5.1",
     "aha-table": "liuwenchao/aha-table#master",
