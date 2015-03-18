@@ -11,14 +11,14 @@ JSON for table/list data.
 
 ##### Example
 
-    <th-table-data></th-table-data>
+    <lens-input-paste></lens-input-paste>
 
-@element th-table-data
+@element lens-input-paste
 @blurb Element providing solution to no problem in particular.
 @status alpha
-@homepage http://sepans.github.io/th-table-data
+@homepage http://sepans.github.io/lens-input-paste
 -->
-<polymer-element name="th-table-data" extends="th-animated" attributes="output">
+<polymer-element name="lens-input-paste" extends="th-animated" attributes="output">
 
 
   <template>
@@ -65,7 +65,7 @@ JSON for table/list data.
 
   <script>
 
-    Polymer('th-table-data', {
+    Polymer('lens-input-paste', {
       tableData: null,
       hasData: false,
 
@@ -198,7 +198,7 @@ JSON for table/list data.
           }
       }, 
       outputChanged: function(){
-        console.log("th-table-data output changed");
+        console.log("lens-input-paste output changed");
         this.fire('th-output-changed', this);
       }
 
