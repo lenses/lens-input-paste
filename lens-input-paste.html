@@ -1,8 +1,4 @@
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../th-animated/th-animated.html">
-<link rel="import" href="../core-collapse/core-collapse.html">
-<link rel="import" href="../aha-table/src/aha-table.html">
-<link rel="import" href="../core-icon-button/core-icon-button.html">
 
 
 <!--
@@ -24,42 +20,29 @@ JSON for table/list data.
   <template>
 
     <style>
-      .disabled {
-        color: #EEE;
-      }
-
-      core-icon-button {
-        vertical-align: top;
-      }
 
       #paste_here {
         height: 35px;
-        width: 95px;
+        width: 120px;
       }
-      .table-container {
-        width: 500px;
-        height: 400px;
-        overflow: scroll;
-        resize: both;
+      .label {
+        font-size: 12px;
+        vertical-align: top;
+        display: block;
+
       }
 
 
     </style>
 
+    <div class="lens-container lens-input">
+
+      <label class="label">Paste HTML table here:</label>
+      <textarea id="paste_here" placeHolder="paste table here"></textarea>
+
+    </div>
 
 
-    <textarea id="paste_here" placeHolder="paste table here"></textarea>
-
-    <core-icon-button icon="view-list" on-click="{{showResults}}" class="{{ {disabled: !hasData} | tokenList}}"></core-icon-button>
-
-    <core-collapse id="results_collapse">
-
-      <div class="table-container">
-        <!-- aha-table doesn't update the columns -->
-        <aha-table id="table" pagesize="10" editable="false"  class="bootstrap" showFooter="true"></aha-table>
-
-      </div>
-    </core-collapse>
 
   </template>
 
@@ -90,7 +73,6 @@ JSON for table/list data.
           var dataLabels = [];
           var data = [];
 
-          self.$.table.data = [];
 
           if(rows.length>0)
           {
@@ -174,7 +156,6 @@ JSON for table/list data.
 
               console.log(data);
               //self.tableData = data;
-              self.$.table.data = data;
               self.hasData = true;
               self.output = data;
             },100);
