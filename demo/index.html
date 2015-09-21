@@ -70,7 +70,7 @@
       </section>
 
       <section>
-        <label>CSV Output:</label><span class="count"></span>
+        <label>Output:</label><span class="count"></span>
         <pre id="output"></pre>
       </section>
 
@@ -81,7 +81,8 @@
           var preOutput = document.getElementById('output');
 
                // update output
-          document.addEventListener('lens-output-changed', function(val) {
+               component.addEventListener('lens-output-changed', function(val) {
+                 console.log(val, val.detail);
             preOutput.textContent = JSON.stringify(val.detail, undefined, 2);
           });
         }
