@@ -15,11 +15,8 @@ JSON for table/list data.
 @status alpha
 @homepage http://lenses.github.io/lens-input-paste
 -->
-<polymer-element name="lens-input-paste" attributes="output">
-
-  <template>
-
-    <style>
+<dom-module id="lens-input-paste">
+  <style>
 
       #paste_here {
         height: 35px;
@@ -32,165 +29,131 @@ JSON for table/list data.
       }
 
     </style>
+  <template>
 
 
     <div class="lens-container lens-input">
 
       <label class="label">Paste HTML table here:</label>
-      <textarea id="paste_here" placeHolder="paste table here"></textarea>
+      <textarea id="paste_here" placeholder="paste table here"></textarea>
 
     </div>
 
 
   </template>
-
-  <script>
-
-    Polymer('lens-input-paste', {
-      hasData: false,
-
-      ready: function() {
-        var self = this;
-
-        //self.hasData = false;
-        self.$.paste_here.addEventListener('paste', self.getPasteData.bind(self));
+</dom-module>
+<script>
+  Polymer({
+    is: 'lens-input-paste',
+    properties: {
+      hasData: {
+        type: Boolean,
+        value: false
       },
-
-      // get data as HTML from the clipboard paste event
-      getPasteData: function(e) {
-        var self = this;
-
-        self.$.paste_here.value="Processing data...";
-        var tableData = e.clipboardData.getData('text/html');
-
-        self.processInput(tableData);
-
-        e.preventDefault();
-      },
-
-      // process HTML table data
-      processInput: function(tableData) {
-
-          var self = this;
-
-          var tableEl = document.createElement('div');
-          tableEl.innerHTML = tableData;
-
-          console.log(tableEl);
-          var rows = tableEl.querySelectorAll('tr');
-
-          var dataLabels = [];
-          var data = [];
-
-
-          if(rows.length>0)
-          {
-            [].forEach.call(rows, function(row, i) {
-              //console.log('row', row);
-              var extractedRow = {};
-              var cells = row.querySelectorAll('td');
-              if(i==0 && cells.length==0) {
-                cells = row.querySelectorAll('th');
-              }
-              [].forEach.call(cells, function(cell, j) {
-              
-                //header
-                if(i===0) {
-
-                  var title = cell.innerText || 'no label';
-                  //line breaks break the table.
-                  title = title.replace(/\n/g, '');
-                  //replace space with _
-                  title = title.replace(/\s/g, '_');
-
-                  title = title.replace(/^([\d]+)/g, 'x$1');
-                  dataLabels.push(title);
-
-
-                }
-                else {
-
-                  var content = cell.innerText;
-
-                  // try image
-                  if(!content) {
-                    var img =  cell.querySelector('img');
-                    if(img) {
-                      content = img.getAttribute('src');
-                    }
-                  }
-
-                  if(content) {
-                    extractedRow[dataLabels[j]] = content;
-                  }
-
-                }
-              });
-              if(i!==0) {
-                data.push(extractedRow);
-              }
-
-            });
-          
+      output: {
+        notify: true,
+        observer: 'outputChanged'
+      }
+    },
+    ready: function () {
+      var self = this;  //self.hasData = false;
+      //self.hasData = false;
+      self.$.paste_here.addEventListener('paste', self.getPasteData.bind(self));
+    },
+    // get data as HTML from the clipboard paste event
+    getPasteData: function (e) {
+      var self = this;
+      self.$.paste_here.value = 'Processing data...';
+      var tableData = e.clipboardData.getData('text/html');
+      self.processInput(tableData);
+      e.preventDefault();
+    },
+    // process HTML table data
+    processInput: function (tableData) {
+      var self = this;
+      var tableEl = document.createElement('div');
+      tableEl.innerHTML = tableData;
+      console.log(tableEl);
+      var rows = tableEl.querySelectorAll('tr');
+      var dataLabels = [];
+      var data = [];
+      if (rows.length > 0) {
+        [].forEach.call(rows, function (row, i) {
+          //console.log('row', row);
+          var extractedRow = {};
+          var cells = row.querySelectorAll('td');
+          if (i == 0 && cells.length == 0) {
+            cells = row.querySelectorAll('th');
           }
-          else {
-
-            var listItems = tableEl.querySelectorAll('li');
-            
-            [].forEach.call(listItems, function(item) {
-
-              var content = item.innerText;
-              if(!content) {
-                var img =  cell.querySelector('img');
-                if(img) {
+          [].forEach.call(cells, function (cell, j) {
+            //header
+            if (i === 0) {
+              var title = cell.innerText || 'no label';  //line breaks break the table.
+              //line breaks break the table.
+              title = title.replace(/\n/g, '');  //replace space with _
+              //replace space with _
+              title = title.replace(/\s/g, '_');
+              title = title.replace(/^([\d]+)/g, 'x$1');
+              dataLabels.push(title);
+            } else {
+              var content = cell.innerText;  // try image
+              // try image
+              if (!content) {
+                var img = cell.querySelector('img');
+                if (img) {
                   content = img.getAttribute('src');
                 }
-              } else {
-                var spaceChar = new RegExp(String.fromCharCode(160), "g"); // catches &nbsp symbol and replaces with a normal space;
-                content = content.replace(spaceChar,' ');
-                data.push({row: content});
               }
-            });
-
+              if (content) {
+                extractedRow[dataLabels[j]] = content;
+              }
+            }
+          });
+          if (i !== 0) {
+            data.push(extractedRow);
           }
-
-          if(data && data.length>0) {
-
-            setTimeout(function() {
-
-              self.$.paste_here.value="Data processed";
-
-              console.log(data);
-              //self.tableData = data;
-              self.hasData = true;
-              self.output = data;
-            },100);
-
+        });
+      } else {
+        var listItems = tableEl.querySelectorAll('li');
+        [].forEach.call(listItems, function (item) {
+          var content = item.innerText;
+          if (!content) {
+            var img = cell.querySelector('img');
+            if (img) {
+              content = img.getAttribute('src');
+            }
+          } else {
+            var spaceChar = new RegExp(String.fromCharCode(160), 'g');  // catches &nbsp symbol and replaces with a normal space;
+            // catches &nbsp symbol and replaces with a normal space;
+            content = content.replace(spaceChar, ' ');
+            data.push({ row: content });
           }
-          else {
-            self.$.paste_here.value="No Table or list found";
-            self.hasData = false;
-          }
-
-      },
-
-      showResults: function(e) {
-          if(this.hasData) {
-            // if(this.$.ctrl_collapse.opened && !this.$.results_collapse.opened) {
-            //   this.$.ctrl_collapse.toggle();
-            // }
-            this.$.results_collapse.toggle();
-          }
-      }, 
-
-      outputChanged: function(){
-        console.log("lens-input-paste output changed");
-        this.fire('lens-output-changed', this);
+        });
       }
-
-
-    });
-
-  </script>
-
-</polymer-element>
+      if (data && data.length > 0) {
+        setTimeout(function () {
+          self.$.paste_here.value = 'Data processed';
+          console.log(data);  //self.tableData = data;
+          //self.tableData = data;
+          self.hasData = true;
+          self.output = data;
+        }, 100);
+      } else {
+        self.$.paste_here.value = 'No Table or list found';
+        self.hasData = false;
+      }
+    },
+    showResults: function (e) {
+      if (this.hasData) {
+        // if(this.$.ctrl_collapse.opened && !this.$.results_collapse.opened) {
+        //   this.$.ctrl_collapse.toggle();
+        // }
+        this.$.results_collapse.toggle();
+      }
+    },
+    outputChanged: function () {
+      console.log('lens-input-paste output changed');
+      this.fire('lens-output-changed', this);
+    }
+  });
+</script>
