@@ -12,6 +12,30 @@
         font-size: 14px;
       }
 
+      .logo {
+        background: url('https://avatars3.githubusercontent.com/u/8629151?v=3&s=50') 0 0 no-repeat;
+        width: 50px;
+        height: 50px;
+        display: inline-block;
+        float: left;
+        margin-left: 5px;
+        margin-right: 15px;
+      }
+
+      p {
+        font-size: 14px;
+      }
+
+      a, a:visited {
+        color: #333;
+      }
+
+      h1 {
+        font-size: 18px;
+        font-family: monaco;
+      }
+
+
       pre {
         border: 1px solid #EEE;
         font-size: 12px;
@@ -62,8 +86,13 @@
   </head>
   <body unresolved>
 
-    <p>Copy any html table or list and paste it inside the text box. It returns JSON for table/list data.</p>
-    
+    <div class="logo">
+    </div> 
+    <h1>lens-input-paste</h1>
+    <p>
+      A '<a href="http://lenses.github.io/lenses-freeform/components/lenses-freeform/" target="_blank">lenses</a>'. Copy and paste any HTML Table or List into the text box. The component returns JSON data extracted from the table. Source on <a href="https://github.com/lenses/lens-input-paste" target="_blank">Github</a>
+    </p>
+
     <section class="component">
         <label>Component:</label><br/>
           <lens-input-paste id="component"></lens-input-paste>
